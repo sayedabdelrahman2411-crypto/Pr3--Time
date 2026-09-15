@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Assessment - Grade 3 Time</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- JS-Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+    <!-- MathJax CDN -->
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', 'Calibri', sans-serif;
+            background: linear-gradient(-45deg, #4c1d95, #6b21a8, #831843, #581c87);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-gradient:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.4);
+        }
+
+        .btn-gradient:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex flex-col justify-between items-center min-h-screen">
+
+    <!-- Header / Branding -->
+    <header class="w-full max-w-4xl bg-white/90 backdrop-filter blur-md rounded-2xl p-4 mb-6 shadow-lg flex flex-wrap justify-between items-center gap-4">
+        <div class="flex items-center space-x-3">
+            <div class="bg-purple-600 text-white p-3 rounded-xl">
+                <i class="fa-solid fa-graduation-cap text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold text-purple-900">Mr. Sayed Abdelrahman</h1>
+                <p class="text-xs text-purple-600 font-semibold">Math Teacher</p>
+            </div>
+        </div>
+        <a href="https://wa.me/201143943465" target="_blank" class="flex items-center space-x-2 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-bold shadow transition transform hover:-translate-y-0.5">
+            <i class="fa-brands fa-whatsapp text-lg"></i>
+            <span>01143943465</span>
+        </a>
+    </header>
+
+    <!-- Main Container -->
+    <main class="w-full max-w-4xl flex-grow flex items-center justify-center">
+
+        <!-- SCREEN 1: Welcome Screen -->
+        <section id="welcome-screen" class="glass-card rounded-3xl p-8 w-full text-center space-y-6">
+            <div class="w-20 h-20 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto text-3xl">
+                <i class="fa-solid fa-user-graduate"></i>
+            </div>
+            <h2 class="text-3xl font-extrabold text-gray-800">Welcome to the Math Exam!</h2>
+            <p class="text-gray-600">Grade 3 – Time Assessment</p>
+            
+            <div class="max-w-md mx-auto space-y-2 text-left">
+                <label class="block text-sm font-bold text-gray-700">Student Name (Two words only):</label>
+                <input type="text" id="student-name" placeholder="Enter First & Last Name (e.g. John Doe)" class="w-full px-4 py-3 rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-center text-lg">
+                <p id="name-error" class="text-red-500 text-xs hidden">Please enter exactly two words (First Name & Last Name).</p>
+            </div>
+
+            <button onclick="validateAndStart()" class="btn-gradient text-white font-bold px-8 py-3 rounded-xl text-lg w-full max-w-md">
+                Proceed to Instructions <i class="fa-solid fa-arrow-right ml-2"></i>
+            </button>
+        </section>
+
+        <!-- SCREEN 2: Instructions Screen -->
+        <section id="instructions-screen" class="glass-card rounded-3xl p-8 w-full hidden space-y-6">
+            <h2 class="text-2xl font-bold text-purple-900 text-center border-b pb-4">Exam Instructions</h2>
+            
+            <ul class="space-y-4 text-gray-700 text-left text-base">
+                <li class="flex items-center space-x-3">
+                    <i class="fa-solid fa-clock text-purple-600 text-xl w-8 text-center"></i>
+                    <span>Exam duration is <strong>20 minutes</strong>.</span>
+                </li>
+                <li class="flex items-center space-x-3">
+                    <i class="fa-solid fa-circle-exclamation text-purple-600 text-xl w-8 text-center"></i>
+                    <span>All questions are mandatory. No questions may be left unanswered.</span>
+                </li>
+                <li class="flex items-center space-x-3">
+                    <i class="fa-solid fa-keyboard text-purple-600 text-xl w-8 text-center"></i>
+                    <span>Enter <strong>numbers only</strong> for fill-in questions (e.g., enter 15, no letters or units).</span>
+                </li>
+                <li class="flex items-center space-x-3">
+                    <i class="fa-solid fa-eye-slash text-purple-600 text-xl w-8 text-center"></i>
+                    <span>Question results will not be shown immediately.</span>
+                </li>
+                <li class="flex items-center space-x-3">
+                    <i class="fa-solid fa-chart-pie text-purple-600 text-xl w-8 text-center"></i>
+                    <span>A comprehensive analytical report will be displayed upon submission.</span>
+                </li>
+            </ul>
+
+            <button onclick="startExam()" class="btn-gradient text-white font-bold px-8 py-3 rounded-xl text-lg w-full">
+                Start Exam Now <i class="fa-solid fa-play ml-2"></i>
+            </button>
+        </section>
+
+        <!-- SCREEN 3: Exam Screen -->
+        <section id="exam-screen" class="glass-card rounded-3xl p-6 md:p-8 w-full hidden space-y-6">
+            <!-- Exam Header Controls -->
+            <div class="flex justify-between items-center border-b pb-4">
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm font-bold text-gray-500">Question:</span>
+                    <span id="question-number" class="text-xl font-extrabold text-purple-700">1</span>
+                    <span class="text-sm text-gray-400">/ 20</span>
+                </div>
+                <div id="difficulty-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700">
+                    Easy
+                </div>
+                <div id="timer" class="flex items-center space-x-2 bg-purple-100 text-purple-800 px-4 py-2 rounded-xl font-mono text-lg font-bold">
+                    <i class="fa-solid fa-stopwatch"></i>
+                    <span id="timer-text">20:00</span>
+                </div>
+            </div>
+
+            <!-- Question Body -->
+            <div class="space-y-4">
+                <h3 id="question-text" class="text-lg md:text-xl font-bold text-gray-800 leading-relaxed text-left min-h-[60px]">
+                    Loading question...
+                </h3>
+
+                <!-- Input Options Area -->
+                <div id="options-container" class="space-y-3 pt-2">
+                    <!-- Dynamic rendering -->
+                </div>
+            </div>
+
+            <!-- Exam Navigation -->
+            <div class="pt-4 border-t flex justify-end">
+                <button id="next-btn" onclick="nextQuestion()" disabled class="btn-gradient text-white font-bold px-8 py-3 rounded-xl text-base disabled:opacity-50">
+                    Next Question <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- SCREEN 4: Results & Analysis Screen -->
+        <section id="results-screen" class="glass-card rounded-3xl p-6 md:p-8 w-full hidden space-y-8">
+            <div class="text-center space-y-3">
+                <h2 class="text-2xl font-extrabold text-purple-900">Exam Results & Skill Analysis</h2>
+                <p id="student-result-name" class="text-gray-600 font-bold text-lg"></p>
+            </div>
+
+            <!-- Score Circle & Motivational Message -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center bg-purple-50 p-6 rounded-2xl">
+                <div class="flex justify-center">
+                    <div class="relative w-40 h-40 flex items-center justify-center rounded-full border-8 border-purple-600 bg-white shadow-inner">
+                        <div class="text-center">
+                            <span id="final-score" class="text-3xl font-extrabold text-purple-900">0/20</span>
+                            <div id="final-percentage" class="text-sm font-bold text-purple-600">0%</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-left space-y-2">
+                    <h3 id="motivation-title" class="text-xl font-bold text-gray-800"></h3>
+                    <p id="motivation-desc" class="text-sm text-gray-600 leading-relaxed"></p>
+                </div>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="space-y-3">
+                <h3 class="text-lg font-bold text-gray-800 text-left"><i class="fa-solid fa-chart-column text-purple-600 mr-2"></i>Skill Breakdown</h3>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border">
+                    <canvas id="skillsChart" class="w-full max-h-64"></canvas>
+                </div>
+            </div>
+
+            <!-- Remedial Section -->
+            <div id="remedial-section" class="space-y-3 text-left hidden">
+                <h3 class="text-lg font-bold text-red-600"><i class="fa-solid fa-kit-medical mr-2"></i>Remedial Training Required</h3>
+                <div id="remedial-list" class="space-y-2">
+                    <!-- Remedial Items -->
+                </div>
+            </div>
+
+            <!-- Detailed Question Review -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-bold text-gray-800 text-left"><i class="fa-solid fa-list-check text-purple-600 mr-2"></i>Detailed Question Review</h3>
+                <div id="detailed-report" class="space-y-4 max-h-96 overflow-y-auto pr-2">
+                    <!-- Detailed Items -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-6 text-center text-white/80 text-xs">
+        All Rights Reserved © Mr. Sayed Abdelrahman - 01143943465
+    </footer>
+
+    <!-- JavaScript Core Logic -->
+    <script>
+        // 20 Questions strictly based on PDF content (Time - Grade 3)
+        const questionBank = [
+            // 10 MCQs
+            {
+                id: 1, type: 'mcq', difficulty: 'medium', skill: 'Elapsed Time (After)',
+                question: 'What time will it be 30 minutes after 1:40?',
+                options: ['2:10', '2:20', '1:70', '2:00'],
+                correct: '2:10',
+                explanation: 'Add 30 minutes to 1:40. Adding 20 minutes reaches 2:00, and adding 10 more minutes reaches 2:10.'
+            },
+            {
+                id: 2, type: 'mcq', difficulty: 'medium', skill: 'Elapsed Time (Before)',
+                question: 'What time was it 20 minutes before 3:15?',
+                options: ['2:55', '3:00', '2:45', '2:50'],
+                correct: '2:55',
+                explanation: 'Subtract 20 minutes from 3:15. Subtracting 15 minutes reaches 3:00, and subtracting 5 more minutes reaches 2:55.'
+            },
+            {
+                id: 3, type: 'mcq', difficulty: 'medium', skill: 'Elapsed Time (After)',
+                question: 'What time will it be 45 minutes after 9:25?',
+                options: ['10:10', '10:00', '10:15', '10:20'],
+                correct: '10:10',
+                explanation: 'Add 45 minutes to 9:25. Adding 35 minutes reaches 10:00, plus 10 remaining minutes equals 10:10.'
+            },
+            {
+                id: 4, type: 'mcq', difficulty: 'medium', skill: 'Elapsed Time (Before)',
+                question: 'What time was it 55 minutes before 11:25?',
+                options: ['10:30', '10:25', '10:35', '10:40'],
+                correct: '10:30',
+                explanation: 'Subtract 55 minutes from 11:25. Subtracting 25 minutes reaches 11:00, and subtracting 30 more minutes reaches 10:30.'
+            },
+            {
+                id: 5, type: 'mcq', difficulty: 'medium', skill: 'Word Problems (Time)',
+                question: 'You left home, walked for 40 minutes, and arrived at the flower shop at 5:20. What time did you leave home?',
+                options: ['4:40', '4:30', '4:50', '5:00'],
+                correct: '4:40',
+                explanation: 'Subtract 40 minutes from arrival time 5:20. Subtracting 20 minutes gives 5:00, and 20 more minutes gives 4:40.'
+            },
+            {
+                id: 6, type: 'mcq', difficulty: 'medium', skill: 'Elapsed Time (After)',
+                question: 'What time will it be 55 minutes after 3:10?',
+                options: ['4:05', '4:00', '4:15', '3:55'],
+                correct: '4:05',
+                explanation: '3:10 + 50 minutes = 4:00. Adding the remaining 5 minutes gives 4:05.'
+            },
+            {
+                id: 7, type: 'mcq', difficulty: 'medium', skill: 'Elapsed Time (Before)',
+                question: 'What time was it 45 minutes before 8:15?',
+                options: ['7:30', '7:45', '7:15', '8:00'],
+                correct: '7:30',
+                explanation: '8:15 minus 15 minutes gives 8:00. Subtracting 30 more minutes gives 7:30.'
+            },
+            {
+                id: 8, type: 'mcq', difficulty: 'medium', skill: 'Word Problems (Time)',
+                question: 'You left home, walked for 30 minutes, and arrived at the aquarium at 9:20. What time did you leave home?',
+                options: ['8:50', '8:40', '9:00', '8:30'],
+                correct: '8:50',
+                explanation: '9:20 minus 20 minutes is 9:00, minus 10 more minutes is 8:50.'
+            },
+            {
+                id: 9, type: 'mcq', difficulty: 'easy', skill: 'Time Units',
+                question: 'How many minutes are in 1 hour?',
+                options: ['60', '30', '45', '90'],
+                correct: '60',
+                explanation: 'There are 60 minutes in 1 complete hour.'
+            },
+            {
+                id: 10, type: 'mcq', difficulty: 'easy', skill: 'Time Units',
+                question: 'How many minutes are in half an hour?',
+                options: ['30', '15', '20', '45'],
+                correct: '30',
+                explanation: 'Half of 60 minutes is 30 minutes.'
+            },
+
+            // 6 Numerical Inputs
+            {
+                id: 11, type: 'fill', difficulty: 'medium', skill: 'Word Problems (Time)',
+                question: 'You walked for 40 minutes and arrived at 5:20. You left home at 4:40. How many minutes did you walk? (Numerical input only)',
+                correct: '40',
+                explanation: 'The duration of the walk given in the problem is 40 minutes.'
+            },
+            {
+                id: 12, type: 'fill', difficulty: 'medium', skill: 'Word Problems (Time)',
+                question: 'You walked for 30 minutes and arrived at the aquarium at 9:20. You left home at 8:50. How many minutes was the walk? (Numerical input only)',
+                correct: '30',
+                explanation: 'The time spent walking is 30 minutes.'
+            },
+            {
+                id: 13, type: 'fill', difficulty: 'easy', skill: 'Time Units',
+                question: 'How many minutes are in a quarter of an hour? (Numerical input only)',
+                correct: '15',
+                explanation: '60 minutes divided by 4 equals 15 minutes.'
+            },
+            {
+                id: 14, type: 'fill', difficulty: 'easy', skill: 'Time Units',
+                question: 'How many minutes are in a third of an hour? (Numerical input only)',
+                correct: '20',
+                explanation: '60 minutes divided by 3 equals 20 minutes.'
+            },
+            {
+                id: 15, type: 'fill', difficulty: 'medium', skill: 'Elapsed Time (After)',
+                question: 'How many minutes after 3:10 is 4:05? (Numerical input only)',
+                correct: '55',
+                explanation: 'From 3:10 to 4:05 is 55 minutes.'
+            },
+            {
+                id: 16, type: 'fill', difficulty: 'medium', skill: 'Elapsed Time (Before)',
+                question: 'How many minutes before 8:15 is 7:30? (Numerical input only)',
+                correct: '45',
+                explanation: 'From 7:30 to 8:15 is 45 minutes.'
+            },
+
+            // 4 True / False
+            {
+                id: 17, type: 'tf', difficulty: 'medium', skill: 'Elapsed Time (After)',
+                question: '30 minutes after 1:40 is equal to 2:10.',
+                options: ['True', 'False'],
+                correct: 'True',
+                explanation: '1:40 + 30 minutes = 2:10.'
+            },
+            {
+                id: 18, type: 'tf', difficulty: 'medium', skill: 'Elapsed Time (Before)',
+                question: '20 minutes before 3:15 is equal to 2:45.',
+                options: ['True', 'False'],
+                correct: 'False',
+                explanation: '20 minutes before 3:15 is 2:55, not 2:45.'
+            },
+            {
+                id: 19, type: 'tf', difficulty: 'medium', skill: 'Word Problems (Time)',
+                question: 'If you arrive at 5:20 after a 40-minute walk, you left home at 4:40.',
+                options: ['True', 'False'],
+                correct: 'True',
+                explanation: '5:20 - 40 minutes = 4:40.'
+            },
+            {
+                id: 20, type: 'tf', difficulty: 'medium', skill: 'Elapsed Time (Before)',
+                question: '55 minutes before 11:25 is equal to 10:30.',
+                options: ['True', 'False'],
+                correct: 'True',
+                explanation: '11:25 - 55 minutes = 10:30.'
+            }
+        ];
+
+        let studentName = "";
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let timerInterval = null;
+        let timeLeft = 1200;
+
+        function validateAndStart() {
+            const nameInput = document.getElementById('student-name').value.trim();
+            const words = nameInput.split(/\s+/);
+            
+            if (words.length === 2 && words[0] !== "" && words[1] !== "") {
+                studentName = nameInput;
+                document.getElementById('name-error').classList.add('hidden');
+                document.getElementById('welcome-screen').classList.add('hidden');
+                document.getElementById('instructions-screen').classList.remove('hidden');
+            } else {
+                document.getElementById('name-error').classList.remove('hidden');
+            }
+        }
+
+        function startExam() {
+            document.getElementById('instructions-screen').classList.add('hidden');
+            document.getElementById('exam-screen').classList.remove('hidden');
+            startTimer();
+            loadQuestion();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('timer-text').innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+                if (timeLeft <= 180) {
+                    document.getElementById('timer').className = "flex items-center space-x-2 bg-red-500 text-white px-4 py-2 rounded-xl font-mono text-lg font-bold animate-pulse";
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    autoSubmit();
+                }
+            }, 1000);
+        }
+
+        function loadQuestion() {
+            const q = questionBank[currentQuestionIndex];
+            document.getElementById('question-number').innerText = currentQuestionIndex + 1;
+            document.getElementById('question-text').innerText = q.question;
+            
+            const badge = document.getElementById('difficulty-badge');
+            if (q.difficulty === 'easy') {
+                badge.innerText = 'Easy';
+                badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700';
+            } else {
+                badge.innerText = 'Medium';
+                badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700';
+            }
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.disabled = true;
+
+            if (q.type === 'mcq' || q.type === 'tf') {
+                q.options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = "w-full text-left p-4 rounded-xl border border-purple-100 bg-white hover:bg-purple-50 transition font-semibold text-gray-700 flex justify-between items-center";
+                    btn.innerHTML = `<span>${opt}</span> <i class="fa-regular fa-circle text-gray-300"></i>`;
+                    btn.onclick = () => selectOption(btn, opt);
+                    container.appendChild(btn);
+                });
+            } else if (q.type === 'fill') {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = 'Type digits only...';
+                input.className = "w-full p-4 rounded-xl border border-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 text-center text-lg font-bold";
+                input.oninput = (e) => {
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                    if (e.target.value.trim() !== "") {
+                        userAnswers[currentQuestionIndex] = e.target.value.trim();
+                        nextBtn.disabled = false;
+                    } else {
+                        nextBtn.disabled = true;
+                    }
+                };
+                container.appendChild(input);
+            }
+
+            if (window.MathJax && MathJax.typesetPromise) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function selectOption(selectedBtn, val) {
+            const container = document.getElementById('options-container');
+            Array.from(container.children).forEach(child => {
+                child.className = "w-full text-left p-4 rounded-xl border border-purple-100 bg-white transition font-semibold text-gray-700 flex justify-between items-center";
+                if(child.querySelector('i')) child.querySelector('i').className = "fa-regular fa-circle text-gray-300";
+            });
+
+            selectedBtn.className = "w-full text-left p-4 rounded-xl border-2 border-purple-600 bg-purple-50 font-bold text-purple-900 flex justify-between items-center";
+            selectedBtn.querySelector('i').className = "fa-solid fa-circle-check text-purple-600";
+
+            userAnswers[currentQuestionIndex] = val;
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < questionBank.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                finishExam();
+            }
+        }
+
+        function autoSubmit() {
+            for(let i=0; i<questionBank.length; i++) {
+                if(!userAnswers[i]) userAnswers[i] = "Unanswered";
+            }
+            finishExam();
+        }
+
+        function finishExam() {
+            clearInterval(timerInterval);
+            document.getElementById('exam-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+
+            document.getElementById('student-result-name').innerText = `Student: ${studentName}`;
+
+            let score = 0;
+            const skillStats = {};
+
+            questionBank.forEach((q, idx) => {
+                if (!skillStats[q.skill]) {
+                    skillStats[q.skill] = { total: 0, correct: 0 };
+                }
+                skillStats[q.skill].total++;
+
+                const isCorrect = userAnswers[idx] === q.correct;
+                if (isCorrect) {
+                    score++;
+                    skillStats[q.skill].correct++;
+                }
+            });
+
+            const percentage = Math.round((score / questionBank.length) * 100);
+            document.getElementById('final-score').innerText = `${score} / ${questionBank.length}`;
+            document.getElementById('final-percentage').innerText = `${percentage}%`;
+
+            const motTitle = document.getElementById('motivation-title');
+            const motDesc = document.getElementById('motivation-desc');
+
+            if (percentage >= 85) {
+                motTitle.innerText = "Outstanding Performance! 🌟";
+                motDesc.innerText = "Excellent mastery of Grade 3 Time concepts! Keep up the brilliant work!";
+                const jsConfetti = new JSConfetti();
+                jsConfetti.addConfetti();
+            } else if (percentage >= 65) {
+                motTitle.innerText = "Great Job! 👍";
+                motDesc.innerText = "Good performance! Review the remaining skills to achieve perfection.";
+            } else {
+                motTitle.innerText = "More Practice Needed 💡";
+                motDesc.innerText = "Don't worry! Review the step-by-step solutions and remedial topics below to master time calculations.";
+            }
+
+            renderChart(skillStats);
+            renderRemedial(skillStats);
+            renderDetailedReport();
+        }
+
+        function renderChart(skillStats) {
+            const labels = Object.keys(skillStats);
+            const data = labels.map(skill => Math.round((skillStats[skill].correct / skillStats[skill].total) * 100));
+
+            const ctx = document.getElementById('skillsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Mastery Level (%)',
+                        data: data,
+                        backgroundColor: 'rgba(168, 85, 247, 0.6)',
+                        borderColor: 'rgba(147, 51, 234, 1)',
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true, max: 100 }
+                    }
+                }
+            });
+        }
+
+        function renderRemedial(skillStats) {
+            const remedialSection = document.getElementById('remedial-section');
+            const remedialList = document.getElementById('remedial-list');
+            remedialList.innerHTML = '';
+            
+            let hasWeakness = false;
+
+            Object.keys(skillStats).forEach(skill => {
+                const passRate = (skillStats[skill].correct / skillStats[skill].total) * 100;
+                if (passRate < 70) {
+                    hasWeakness = true;
+                    const item = document.createElement('div');
+                    item.className = "p-4 bg-red-50 border-l-4 border-red-500 rounded-xl text-sm font-semibold text-red-800";
+                    item.innerHTML = `Skill "<strong>${skill}</strong>": Requires further practice and review.`;
+                    remedialList.appendChild(item);
+                }
+            });
+
+            if (hasWeakness) {
+                remedialSection.classList.remove('hidden');
+            }
+        }
+
+        function renderDetailedReport() {
+            const reportContainer = document.getElementById('detailed-report');
+            reportContainer.innerHTML = '';
+
+            questionBank.forEach((q, idx) => {
+                const isCorrect = userAnswers[idx] === q.correct;
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-2xl border text-left space-y-2 ${isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`;
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-center font-bold">
+                        <span class="text-xs bg-white px-2 py-1 rounded-md text-gray-500 border">Question ${idx + 1}</span>
+                        <span class="${isCorrect ? 'text-green-700' : 'text-red-700'}">
+                            ${isCorrect ? '<i class="fa-solid fa-circle-check"></i> Correct' : '<i class="fa-solid fa-circle-xmark"></i> Incorrect'}
+                        </span>
+                    </div>
+                    <p class="font-bold text-gray-800">${q.question}</p>
+                    <div class="text-xs space-y-1 text-gray-700">
+                        <p>Your Answer: <span class="font-bold ${isCorrect ? 'text-green-800' : 'text-red-800'}">${userAnswers[idx] || 'None'}</span></p>
+                        ${!isCorrect ? `<p>Correct Answer: <span class="font-bold text-green-800">${q.correct}</span></p>` : ''}
+                    </div>
+                    <div class="text-xs bg-white/80 p-3 rounded-xl border border-gray-200 text-gray-600">
+                        <strong class="text-purple-700">Solution Step-by-Step:</strong> ${q.explanation}
+                    </div>
+                `;
+
+                reportContainer.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>
